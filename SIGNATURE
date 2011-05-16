@@ -1,0 +1,36 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.68.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 cba88fbcfd0fb3ba5f76ad00d9b213dde51ea752 .cvsignore
+SHA1 ce2ce05587947247dc969772e8f5236cb83dd4fd Build.PL
+SHA1 2a6c2c44b667abcb8d11c3d27a39eb8bee20eea1 Changes
+SHA1 192425cbad54c6f06480a4ff8f12803cd3337cc3 MANIFEST
+SHA1 1967a4b33059ba4ac92a51213672705a5b2c4233 META.json
+SHA1 1e3e478e5fcc24ae6ee37cd60459cf6308fe03ce META.yml
+SHA1 a4df8e97ccd390a42212af5a9f4d0986c85e7a5f Makefile.PL
+SHA1 c34aaa7c87aa6a71eaaea48fb35d85e4fa978420 README
+SHA1 97869dc49d867a9f9a9ee6b74cf4b357e2433ccd lib/DynaLoader/Functions.pm
+SHA1 5d094c398dffab40a86101f937ccff8d77e3ee13 t/dyna_low.c
+SHA1 e814a76e7d8813fcf8e6dbf2d1d32f07452a4b51 t/dyna_low.t
+SHA1 904d9a4f76525e2303e4b0c168c68230f223c8de t/pod_cvg.t
+SHA1 65c75abdef6f01a5d1588a307f2ddfe2333dc961 t/pod_syn.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk3RmLAACgkQOV9mt2VyAVEW4wCgiK0UxHU6mQFXhDWUyOyk53fh
+SDoAnRZwmqPxOj6xmlXom0jpc66pAANO
+=6tEq
+-----END PGP SIGNATURE-----
