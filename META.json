@@ -4,7 +4,7 @@
       "Andrew Main (Zefram) <zefram@fysh.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110580",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112621",
    "license" : [
       "perl_5"
    ],
@@ -36,8 +36,6 @@
             "Carp" : 0,
             "DynaLoader" : 0,
             "Exporter" : 0,
-            "Module::Runtime" : "0.007",
-            "Params::Classify" : "0.008",
             "parent" : 0,
             "perl" : "5.006",
             "strict" : 0,
@@ -48,7 +46,7 @@
    "provides" : {
       "DynaLoader::Functions" : {
          "file" : "lib/DynaLoader/Functions.pm",
-         "version" : 0
+         "version" : "0.001"
       }
    },
    "release_status" : "stable",
@@ -57,5 +55,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.000"
+   "version" : "0.001"
 }

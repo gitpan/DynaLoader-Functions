@@ -6,7 +6,6 @@ use Module::Build;
 
 Module::Build->new(
 	module_name => "DynaLoader::Functions",
-	dist_version => "0.000",
 	license => "perl",
 	configure_requires => {
 		"Module::Build" => 0,
@@ -25,8 +24,6 @@ Module::Build->new(
 		"Carp" => 0,
 		"DynaLoader" => 0,
 		"Exporter" => 0,
-		"Module::Runtime" => "0.007",
-		"Params::Classify" => "0.008",
 		"parent" => 0,
 		"perl" => "5.006",
 		"strict" => 0,

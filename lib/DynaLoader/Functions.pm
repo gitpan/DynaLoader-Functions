@@ -37,12 +37,7 @@ package DynaLoader::Functions;
 use warnings;
 use strict;
 
-use Carp qw(carp croak);
-use DynaLoader ();
-use Module::Runtime 0.007 qw(check_module_name);
-use Params::Classify 0.008 qw(is_string check_string);
-
-our $VERSION = "0.000";
+our $VERSION = "0.001";
 
 use parent "Exporter";
 our @EXPORT_OK = qw(
@@ -57,6 +52,28 @@ use constant _IS_NETWARE => $^O eq "NetWare";
 # It is not listed as a dependency of this module, because it is
 # unavailable on other platforms.
 require VMS::Filespec if _IS_VMS;
+
+# Load Carp lazily, as do DynaLoader and other things at this level.
+sub _carp { require Carp; Carp::carp(@_); }
+sub _croak { require Carp; Carp::croak(@_); }
+
+# Logic duplicated from Params::Classify.  This is too much of an
+# infrastructure module, an early build dependency, for it to have such
+# a dependency.
+sub _is_string($) {
+	my($arg) = @_;
+	return defined($arg) && ref(\$arg) eq "SCALAR";
+}
+sub _check_string($) { die "argument is not a string\n" unless &_is_string; }
+
+# Logic duplicated from Module::Runtime for the same reason.
+sub _check_module_name($) {
+	if(!&_is_string) {
+		die "argument is not a module name\n";
+	} elsif($_[0] !~ /\A[A-Z_a-z][0-9A-Z_a-z]*(?:::[0-9A-Z_a-z]+)*\z/) {
+		die "`$_[0]' is not a module name\n";
+	}
+}
 
 =head1 FUNCTIONS
 
@@ -83,7 +100,8 @@ normal operation load its corresponding C library.
 
 sub loadable_for_module($) {
 	my($modname) = @_;
-	check_module_name($modname);
+	_check_module_name($modname);
+	require DynaLoader;
 	# This logic is derived from DynaLoader::bootstrap().  In places
 	# it mixes native directory names from @INC and Unix-style
 	# /-separated path syntax.  This apparently works correctly
@@ -108,7 +126,7 @@ sub loadable_for_module($) {
 			} @INC),
 			@INC,
 			$modfname)
-		or croak "Can't locate loadable object ".
+		or _croak "Can't locate loadable object ".
 			"for module $modname in \@INC (\@INC contains: @INC)";
 	if(_IS_VMS && $Config::Config{d_vms_case_sensitive_symbols}) {
 		$loadlib = uc($loadlib);
@@ -144,13 +162,13 @@ my $linkable_finder = {
 				return ($impname) if -e $impname;
 			}
 		}
-		croak "Can't locate linkable object for $_[0]";
+		_croak "Can't locate linkable object for $_[0]";
 	},
 	cygwin => sub { ($_[0]) },
 }->{$^O};
 
 sub linkable_for_loadable($) {
-	check_string($_[0]);
+	_check_string($_[0]);
 	if($linkable_finder) {
 		return $linkable_finder->($_[0]);
 	} else {
@@ -176,7 +194,7 @@ sub linkable_for_module($) {
 	if($linkable_finder) {
 		return $linkable_finder->(loadable_for_module($_[0]));
 	} else {
-		check_module_name($_[0]);
+		_check_module_name($_[0]);
 		return ();
 	}
 }
@@ -256,19 +274,20 @@ On failure, C<die>s.
 sub dyna_load($;$) {
 	my($loadable_filename, $options) = @_;
 	$options = {} if @_ < 2;
-	check_string($loadable_filename);
+	_check_string($loadable_filename);
 	foreach(sort keys %$options) {
-		croak "bad dyna_load option `$_'" unless /\A(?:
+		_croak "bad dyna_load option `$_'" unless /\A(?:
 			resolve_using|require_symbols|use_bootstrap_options|
 			symbols_global|unresolved_action
 		)\z/x;
 	}
 	my $unres_action = exists($options->{unresolved_action}) ?
 		$options->{unresolved_action} : "ERROR";
-	croak "bad dyna_load unresolved_action value `$unres_action'"
-		unless is_string($unres_action) &&
+	_croak "bad dyna_load unresolved_action value `$unres_action'"
+		unless _is_string($unres_action) &&
 			$unres_action =~ /\A(?:ERROR|WARN|IGNORE)\z/;
-	croak "dynamic loading not available in this perl"
+	require DynaLoader;
+	_croak "dynamic loading not available in this perl"
 		unless defined &DynaLoader::dl_load_file;
 	local @DynaLoader::dl_resolve_using =
 		exists($options->{resolve_using}) ?
@@ -286,16 +305,16 @@ sub dyna_load($;$) {
 	}
 	my $libh = DynaLoader::dl_load_file($loadable_filename,
 			$options->{symbols_global} ? 0x01 : 0)
-		or croak "failed to load library $loadable_filename: ".
+		or _croak "failed to load library $loadable_filename: ".
 				"@{[DynaLoader::dl_error()]}";
 	if($unres_action ne "IGNORE" &&
 			(my @unresolved = DynaLoader::dl_undef_symbols())) {
 		my $e = "undefined symbols in $loadable_filename: @unresolved";
 		if($unres_action eq "ERROR") {
 			DynaLoader::dl_unload_file($libh);
-			croak $e;
+			_croak $e;
 		} else {
-			carp $e;
+			_carp $e;
 		}
 	}
 	return $libh;
@@ -329,21 +348,22 @@ sub dyna_resolve($$;$) {
 	my($libh, $symbol, $options) = @_;
 	$options = {} if @_ < 3;
 	foreach(sort keys %$options) {
-		croak "bad dyna_resolve option `$_'"
+		_croak "bad dyna_resolve option `$_'"
 			unless /\Aunresolved_action\z/;
 	}
 	my $unres_action = exists($options->{unresolved_action}) ?
 		$options->{unresolved_action} : "ERROR";
-	croak "bad dyna_load unresolved_action value `$unres_action'"
-		unless is_string($unres_action) &&
+	_croak "bad dyna_load unresolved_action value `$unres_action'"
+		unless _is_string($unres_action) &&
 			$unres_action =~ /\A(?:ERROR|WARN|IGNORE)\z/;
+	require DynaLoader;
 	my $val = DynaLoader::dl_find_symbol($libh, $symbol);
 	if(!defined($val) && $unres_action ne "IGNORE") {
 		my $e = "undefined symbol: $symbol";
 		if($unres_action eq "ERROR") {
-			croak $e;
+			_croak $e;
 		} else {
-			carp $e;
+			_carp $e;
 		}
 	}
 	return $val;
@@ -377,14 +397,15 @@ sub dyna_unload($;$) {
 	my($libh, $options) = @_;
 	$options = {} if @_ < 2;
 	foreach(sort keys %$options) {
-		croak "bad dyna_unload option `$_'" unless /\Afail_action\z/;
+		_croak "bad dyna_unload option `$_'" unless /\Afail_action\z/;
 	}
 	my $fail_action = exists($options->{fail_action}) ?
 		$options->{fail_action} : "ERROR";
-	croak "bad dyna_load fail_action value `$fail_action'"
-		unless is_string($fail_action) &&
+	_croak "bad dyna_load fail_action value `$fail_action'"
+		unless _is_string($fail_action) &&
 			$fail_action =~ /\A(?:ERROR|WARN|IGNORE)\z/;
 	my $err;
+	require DynaLoader;
 	if(defined &DynaLoader::dl_unload_file) {
 		DynaLoader::dl_unload_file($_[0])
 			or $err = DynaLoader::dl_error();
@@ -394,9 +415,9 @@ sub dyna_unload($;$) {
 	if(defined($err) && $fail_action ne "IGNORE") {
 		my $e = "failed to unload library: $err";
 		if($fail_action eq "ERROR") {
-			croak $e;
+			_croak $e;
 		} else {
-			carp $e;
+			_carp $e;
 		}
 	}
 }
@@ -415,7 +436,7 @@ Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2011 Andrew Main (Zefram) <zefram@fysh.org>
+Copyright (C) 2011, 2012 Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 LICENSE
 
