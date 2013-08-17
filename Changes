@@ -1,3 +1,9 @@
+version 0.002; 2013-08-17
+
+  * in the module used for testing, explicitly export symbols, and
+    declare them at link time with dl_func_list, for those platforms
+    that require it
+
 version 0.001; 2012-02-07
 
   * duplicate small functions from Params::Classify and Module::Runtime,

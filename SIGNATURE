@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.68.
+signed via the Module::Signature module, version 0.73.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -16,21 +16,21 @@ Hash: SHA1
 
 SHA1 72acbec5f6a757fc486eb6098bf0d4ff9b40b99d .gitignore
 SHA1 c6c15c06fbec1d9b0586eac6c5874dedbecbd045 Build.PL
-SHA1 93725986072485b37e570a3cddb8f6f1154695bd Changes
+SHA1 aceacf0961e9ed0bfb35e7d9080c3f7ac2582b93 Changes
 SHA1 8240d59cacc33c29e16d72a8f8bae913782ec749 MANIFEST
-SHA1 fbfb7dc44fb677338b17ae8f093e27aac6f27376 META.json
-SHA1 5064ba6385ed84b02dfaab95fb8c53d71403d197 META.yml
-SHA1 a4df8e97ccd390a42212af5a9f4d0986c85e7a5f Makefile.PL
-SHA1 42f1ac5d2711df5e3687a966053127b74d35acea README
-SHA1 0456813c39da01adab641c0843cebe7d96d97fe1 lib/DynaLoader/Functions.pm
-SHA1 2b3f753562bc33b098c8a3f234008a0a61ba868b t/dyna_low.c
-SHA1 e814a76e7d8813fcf8e6dbf2d1d32f07452a4b51 t/dyna_low.t
+SHA1 d9aa56ed8b7044d2ca6f91093982b5ab766ee6c8 META.json
+SHA1 a1efe30955b4d5c05a1ad3e98cee7907b97af6f9 META.yml
+SHA1 0bfa106a64fc680e40507c47cbf461cea3a8b374 Makefile.PL
+SHA1 4909499e32502341a440f753a040ea31cc6116c4 README
+SHA1 23814afd91fd435b756dc96fa38e3fefa7ed057e lib/DynaLoader/Functions.pm
+SHA1 8a3ed5289676357f05592090a09e7ef841b5a476 t/dyna_low.c
+SHA1 312d487c13a77c08b9cf209a3e97a74506ec17cd t/dyna_low.t
 SHA1 904d9a4f76525e2303e4b0c168c68230f223c8de t/pod_cvg.t
 SHA1 65c75abdef6f01a5d1588a307f2ddfe2333dc961 t/pod_syn.t
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEARECAAYFAk8xIt0ACgkQOV9mt2VyAVGwUwCeMdKzz6KPDxatpdXu779G574r
-9lMAmgKbvhAV/a41j+KzqWMVABzM1jH7
-=PX72
+iEYEARECAAYFAlIPf6sACgkQOV9mt2VyAVHvaQCfdwhtqWtK5Gfvvs43QZ79zWWG
+qakAnAjjAJV17LERBTYFS7EYpweuaGds
+=xwD/
 -----END PGP SIGNATURE-----
